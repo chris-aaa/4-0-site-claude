@@ -1,0 +1,107 @@
+:root {
+  /* Brand colors pulled from Figma design tokens */
+  --navy-900: #0b1f44;
+  --navy-700: #324a72;
+  --navy-800: #1f3357;
+  --blue-600: #016bcd;
+  --blue-700: #0156a3;
+  --blue-200: #b9defe;
+  --blue-50: #eef6ff;
+  --blue-100: #dcecfd;
+  --red: #e1251b;
+  --white: #ffffff;
+  --grey-50: #f6f8fb;
+  --grey-100: #eef1f6;
+  --grey-200: #e2e8f0;
+  --grey-400: #94a3b8;
+  --grey-500: #64748b;
+  --grey-700: #334155;
+  --text: #1f2a44;
+
+  --shadow-card: 0 8px 24px rgba(15, 31, 68, 0.08);
+  --shadow-pop: 0 12px 40px rgba(15, 31, 68, 0.18);
+  --radius: 12px;
+
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 999px;
+  padding: 14px 28px;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-primary {
+  background: var(--blue-600);
+  color: var(--white);
+}
+.btn-primary:hover {
+  background: var(--blue-700);
+}
+.btn-outline {
+  background: var(--white);
+  color: var(--blue-700);
+  box-shadow: inset 0 0 0 1.5px var(--blue-200);
+}
+.btn-outline:hover {
+  background: var(--blue-50);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
