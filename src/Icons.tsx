@@ -123,15 +123,16 @@ export const Check = ({ size = 18, className, style }: IconProps) => (
   </svg>
 );
 
-/** The AAA orbit logo, recreated as inline SVG. */
+/** The official AAA orbit logo (exported from Figma as /figma/aaa-logo.svg). */
 export const AAALogo = ({ height = 36, light = false }: { height?: number; light?: boolean }) => {
-  const w = (height / 36) * 66;
+  const w = (height / 44) * 73; // preserve the asset's 73:44 aspect ratio
   return (
-    <svg width={w} height={height} viewBox="0 0 66 36" fill="none" aria-label="AAA">
-      <ellipse cx="33" cy="17" rx="30" ry="13.5" transform="rotate(-12 33 17)" stroke="#016bcd" strokeWidth="2.4" />
-      <g fill={light ? "#ffffff" : "#e1251b"} fontFamily="Inter, sans-serif" fontWeight="800">
-        <text x="9" y="24" fontSize="20" letterSpacing="-1">AAA</text>
-      </g>
-    </svg>
+    <img
+      src="/figma/aaa-logo.svg"
+      alt="AAA"
+      width={w}
+      height={height}
+      style={light ? { filter: "brightness(0) invert(1)" } : undefined}
+    />
   );
 };
