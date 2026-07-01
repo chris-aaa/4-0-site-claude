@@ -48,14 +48,49 @@ const LABEL_TO_PAGE: Record<string, Page> = {
   "Go travel": "travel",
 };
 
+// The imported designs are fixed-width desktop layouts. Rather than reflow
+// them, we scale the whole page down to fit narrower viewports so the site
+// works at any screen size without horizontal scrolling.
+const DESIGN_WIDTH = 1440;
+
 export function SiteRouter() {
   const [page, setPage] = useState<Page>("home");
   const outerRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(() =>
+    typeof window === "undefined"
+      ? 1
+      : Math.min(1, window.innerWidth / DESIGN_WIDTH),
+  );
+  const [contentHeight, setContentHeight] = useState<number | null>(null);
 
   // Scroll to the top whenever the page changes, like a real navigation.
   useEffect(() => {
     outerRef.current?.scrollTo({ top: 0 });
+  }, [page]);
+
+  // Responsive scale-to-fit: shrink the fixed-width design to the viewport
+  // width and reserve the resulting (scaled) height so scrolling stays
+  // correct. Recomputes on resize, page change, and content size changes
+  // (e.g. images loading).
+  useEffect(() => {
+    const inner = innerRef.current;
+    const outer = outerRef.current;
+    if (!inner || !outer) return;
+    const measure = () => {
+      const s = Math.min(1, outer.clientWidth / DESIGN_WIDTH);
+      setScale(s);
+      // offsetHeight is the untransformed layout height (stable at 1440 wide).
+      setContentHeight(inner.offsetHeight);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(inner);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
   }, [page]);
 
   // Homepage hero slider: cross-fade between the imported (family) slide and
@@ -325,19 +360,37 @@ export function SiteRouter() {
     <div
       ref={outerRef}
       onClick={handleClick}
-      className="size-full overflow-auto bg-white site-router-root"
+      className="size-full overflow-x-hidden overflow-y-auto bg-white site-router-root"
     >
-      <div ref={innerRef} className={`page-${page}`}>
-        {/* The Travel design ships a different header; render the homepage's
-            global nav bar on top and hide Travel's own navs (see index.css).
-            Its category links route via the shared handleClick above. */}
-        {page === "travel" && (
-          <div className="global-nav-host">
-            <GlobalNav />
+      {/* Scale wrapper: clips overflow and reserves the scaled height so the
+          fixed-width page below fits any viewport width. */}
+      <div
+        style={{
+          height: contentHeight != null ? contentHeight * scale : undefined,
+          overflow: "hidden",
+        }}
+      >
+        <div
+          ref={innerRef}
+          className={`page-${page}`}
+          style={{
+            width: DESIGN_WIDTH,
+            margin: "0 auto",
+            transformOrigin: "top left",
+            transform: `scale(${scale})`,
+          }}
+        >
+          {/* The Travel design ships a different header; render the homepage's
+              global nav bar on top and hide Travel's own navs (see index.css).
+              Its category links route via the shared handleClick above. */}
+          {page === "travel" && (
+            <div className="global-nav-host">
+              <GlobalNav />
+            </div>
+          )}
+          <div className="page-body">
+            <Active />
           </div>
-        )}
-        <div className="page-body">
-          <Active />
         </div>
       </div>
     </div>
