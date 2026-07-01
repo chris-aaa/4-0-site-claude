@@ -1,0 +1,137 @@
+@import './fonts.css';
+@import './tailwind.css';
+@import './theme.css';
+
+/* Clickable affordances for every button/link across the imported AAA
+   designs. Every page renders inside .site-router-root, so these rules
+   cover all pages. Buttons come through as <div>s tagged with a
+   `data-name` that contains "button" (e.g. "Button", "secondary nav
+   button", "button outline", "Insurance Type Button"), alongside the
+   various link and logo elements. */
+.site-router-root [data-name*="button" i],
+.site-router-root [data-name*="Tertiary link" i],
+.site-router-root [data-name*="Nav - footer links" i],
+.site-router-root [data-name*="Link -" i],
+.site-router-root [data-name*="Logo" i],
+.site-router-root [data-name="explore-travel-btn"] {
+  cursor: pointer;
+  transition: opacity 0.15s ease, filter 0.15s ease, transform 0.1s ease;
+}
+
+.site-router-root [data-name*="button" i]:hover,
+.site-router-root [data-name*="Tertiary link" i]:hover,
+.site-router-root [data-name*="Nav - footer links" i]:hover,
+.site-router-root [data-name*="Link -" i]:hover,
+.site-router-root [data-name*="Logo" i]:hover,
+.site-router-root [data-name="explore-travel-btn"]:hover {
+  opacity: 0.9;
+  filter: brightness(0.96);
+}
+
+/* Subtle press feedback so buttons feel tactile when clicked. */
+.site-router-root [data-name*="button" i]:active,
+.site-router-root [data-name*="Tertiary link" i]:active,
+.site-router-root [data-name*="Link -" i]:active,
+.site-router-root [data-name="explore-travel-btn"]:active {
+  transform: scale(0.98);
+}
+
+/* Prevent fixed height from clipping the price row on flight-deal cards */
+.site-router-root [data-name="Flight Deal - Mini"] [data-name="Container"] {
+  height: auto !important;
+  min-height: 195px;
+}
+
+/* Travel page uses the homepage's global nav bar (rendered by the wrapper in
+   .global-nav-host). Hide the Travel design's own top bar and primary nav,
+   scoped to .page-body so the shared nav above it stays visible. */
+.page-travel .page-body [data-name="Top nav bar"],
+.page-travel .page-body [data-name="primary nav"] {
+  display: none !important;
+}
+
+/* Travel page: clip the flight-deal slider horizontally so cards slide
+   cleanly in/out of view when the caret carousel runs, while leaving the
+   vertical axis visible so the card drop-shadows aren't cut off. (The
+   homepage slider already has overflow-clip built into the import.) */
+.page-travel [data-name="Flight Deal Slider animated hover"] {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+/* Travel page: drop the "Save on hotels, car rentals..." line further below
+   the flight-deal cards so it isn't crowding/floating over them, and give it
+   more breathing room. The text is the slider's immediate next sibling. */
+.page-travel [data-name="Flight Deal Slider animated hover"] + div {
+  margin-top: 56px !important;
+}
+
+/* Home page: same treatment — lower the "Save on hotels..." line below the
+   flight-deal cards. It's the slider's immediate next sibling here too. */
+.page-home [data-name="Flight Deal Slider animated hover"] + div {
+  margin-top: 56px !important;
+}
+
+/* Journeys ("life journey") card deck: keep the back cards upright (not
+   fanned) and stacked flush on top of the front "Recently Married" card.
+   The rotate wrappers are used only in that deck; their parent absolute
+   wrappers get repositioned onto the front card's rect so every card is
+   concentric and aligned. */
+.site-router-root .-rotate-15.flex-none,
+.site-router-root .-rotate-10.flex-none,
+.site-router-root .-rotate-5.flex-none {
+  transform: none !important;
+}
+.site-router-root div:has(> .-rotate-15.flex-none),
+.site-router-root div:has(> .-rotate-10.flex-none),
+.site-router-root div:has(> .-rotate-5.flex-none) {
+  left: 197px !important;
+  top: 363px !important;
+  width: 1018px !important;
+  height: 584px !important;
+}
+
+/* Plane flies out the right of its circle then re-enters from the left */
+@keyframes plane-fly {
+  0%   { transform: translateX(0); opacity: 1; }
+  30%  { transform: translateX(180%); opacity: 0; }
+  31%  { transform: translateX(-180%); opacity: 0; }
+  60%  { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+/* The plane only takes off while its flight-deal card is hovered. */
+.site-router-root [data-name="Flight Deal - Mini"]:hover .aaa-plane-anim {
+  animation: plane-fly 3s ease-in-out infinite;
+}
+
+/* Explore AAA widget: pop the icon when its button is hovered. The icon is
+   the first child of each explore-*-btn, followed by the text label. */
+@keyframes explore-icon-pop {
+  0%   { transform: translateY(0) scale(1); }
+  40%  { transform: translateY(-6px) scale(1.14); }
+  70%  { transform: translateY(0) scale(1.04); }
+  100% { transform: translateY(0) scale(1); }
+}
+.site-router-root [data-name^="explore-"][data-name$="-btn"] > :first-child {
+  transition: transform 0.2s ease;
+}
+.site-router-root [data-name^="explore-"][data-name$="-btn"]:hover > :first-child {
+  animation: explore-icon-pop 0.5s ease;
+}
+
+/* Normalize the "Explore AAA" vertical separators so each is a clean
+   full-height 1px line matching its container, instead of the stretched
+   width-based box the import renders. */
+.aaa-sep-fix > * {
+  visibility: hidden;
+}
+.aaa-sep-fix::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.1);
+}
